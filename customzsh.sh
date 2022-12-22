@@ -4,7 +4,7 @@
 sudo apt install -y zsh zsh-doc git curl
 
 ## get oh my zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
 ## get zsh plugins
 
@@ -27,6 +27,10 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-m
 
 ## copy custom zshrc file to current user dir
 cp .zshrc ~/
+
+# change shell to zsh
+chsh -s $(which zsh)
+zsh
 
 ## activate zsh with new defaults
 source ~/.zshrc
