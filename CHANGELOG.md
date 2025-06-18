@@ -29,6 +29,7 @@ All notable changes to this project will be documented in this file.
 - Improved error handling for PPA addition in apt-based systems
 - Fixed source command to handle non-zsh shells gracefully
 - Added proper verification that eza installation succeeded
+- **install_eza.sh**: Made script executable with proper permissions (chmod +x)
 
 ### Improved
 - Modular architecture with separated eza installation logic
