@@ -5,7 +5,12 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased] - 2025-06-18
 
 ### Added
-- **eza integration**: Added automatic installation of eza (modern ls replacement)
+- **install_eza.sh**: New dedicated cross-platform eza installation script
+  - Support for multiple package managers (apt, dnf, pacman, zypper, brew)
+  - Cargo fallback installation method
+  - Comprehensive error handling and installation verification
+  - Shell-agnostic sourcing to prevent errors in non-zsh environments
+- **eza integration**: Enhanced automatic installation of eza (modern ls replacement)
   - Script now tries `apt install eza` first
   - Falls back to adding official eza repository if not available in default repos
   - Adds eza repository with proper GPG key verification
@@ -14,6 +19,18 @@ All notable changes to this project will be documented in this file.
   - Groups directories first for better organization
 
 ### Changed
+- **customzsh.sh**: Updated to use install_eza.sh script instead of inline eza installation
+- **CLAUDE.md**: Updated documentation to reflect modular architecture changes
 - Updated installation process to include eza setup
 - Extended .zshrc configuration with eza aliases
-- Updated CLAUDE.md documentation to reflect new features
+
+### Fixed
+- Added `--noconfirm` flag to pacman commands for non-interactive operation
+- Improved error handling for PPA addition in apt-based systems
+- Fixed source command to handle non-zsh shells gracefully
+- Added proper verification that eza installation succeeded
+
+### Improved
+- Modular architecture with separated eza installation logic
+- Better cross-platform compatibility
+- More robust error handling throughout installation process

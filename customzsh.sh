@@ -4,15 +4,13 @@
 sudo apt install -y zsh zsh-doc git curl
 
 ## install eza (modern ls replacement)
-if ! sudo apt install -y eza 2>/dev/null; then
-    echo "eza not found in default repositories, adding eza repository..."
-    # Add eza repository and install
-    sudo mkdir -p /etc/apt/keyrings
-    wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo tee /etc/apt/keyrings/gierens.asc > /dev/null
-    echo "deb [signed-by=/etc/apt/keyrings/gierens.asc] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list
-    sudo chmod 644 /etc/apt/keyrings/gierens.asc /etc/apt/sources.list.d/gierens.list
-    sudo apt update
-    sudo apt install -y eza
+if [ -f "./install_eza.sh" ]; then
+    echo "Running install_eza.sh script..."
+    chmod +x ./install_eza.sh
+    ./install_eza.sh
+else
+    echo "install_eza.sh not found, skipping eza installation."
+    echo "Please ensure install_eza.sh is in the same directory as this script."
 fi
 
 ## get oh my zsh

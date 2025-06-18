@@ -29,5 +29,12 @@ The installation process follows these steps:
 
 ## Key Components
 
-- **customzsh.sh**: Automated installer that handles dependency installation, eza installation, Oh My Zsh setup, plugin installation, and shell configuration
+- **customzsh.sh**: Automated installer that handles dependency installation, Oh My Zsh setup, plugin installation, and shell configuration. Now uses the dedicated install_eza.sh script for eza installation
+- **install_eza.sh**: Dedicated cross-platform eza installation script with comprehensive package manager support (apt, dnf, pacman, zypper, brew) and fallback options (cargo). Includes proper error handling and installation verification
 - **.zshrc**: Pre-configured zsh settings with agnoster theme, plugins (git, zsh-autosuggestions, zsh-syntax-highlighting), and eza aliases for enhanced directory listing
+
+## Recent Updates
+
+- **Enhanced eza installation**: Created dedicated install_eza.sh script with cross-platform support and robust error handling
+- **Improved reliability**: Added installation verification, proper error handling for package managers, and shell-agnostic sourcing
+- **Modular architecture**: Separated eza installation logic into its own script for better maintainability
