@@ -2,9 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased] - 2025-06-18
+## [Unreleased] - 2025-06-17
 
 ### Added
+- **Official eza repository support**: Updated install_eza.sh to use deb.gierens.de repository
+  - Primary fallback for Debian/Ubuntu systems when eza not in default repositories
+  - Automatic GPG key installation and repository configuration
+  - PPA remains as secondary fallback option
 - **install_eza.sh**: New dedicated cross-platform eza installation script
   - Support for multiple package managers (apt, dnf, pacman, zypper, brew)
   - Cargo fallback installation method

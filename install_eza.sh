@@ -13,25 +13,60 @@ install_eza_apt() {
         echo "eza installed successfully via apt."
         return 0 # Success
     else
-        echo "eza not found in default apt repositories, attempting to add PPA..."
-        if ! command_exists add-apt-repository; then
-            echo "Installing 'software-properties-common' to enable add-apt-repository..."
-            if ! sudo apt install -y software-properties-common; then
-                echo "Failed to install software-properties-common."
+        echo "eza not found in default apt repositories, attempting to add official eza repository..."
+        
+        # Ensure gpg is installed
+        if ! command_exists gpg; then
+            echo "Installing gpg..."
+            sudo apt update
+            if ! sudo apt install -y gpg; then
+                echo "Failed to install gpg."
                 return 1
             fi
         fi
-        if ! sudo add-apt-repository ppa:eza-community/eza -y; then
-            echo "Failed to add eza PPA repository."
+        
+        # Add eza repository from deb.gierens.de
+        echo "Adding eza repository from deb.gierens.de..."
+        sudo mkdir -p /etc/apt/keyrings
+        if ! wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg; then
+            echo "Failed to download and install GPG key."
             return 1
         fi
+        
+        if ! echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list; then
+            echo "Failed to add eza repository."
+            return 1
+        fi
+        
+        sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
         sudo apt update
+        
         if sudo apt install -y eza; then
-            echo "eza installed successfully via PPA."
+            echo "eza installed successfully via official repository."
             return 0 # Success
         else
-            echo "Failed to install eza even after adding PPA."
-            return 1 # Failure
+            echo "Failed to install eza from official repository, trying PPA fallback..."
+            
+            # Fallback to PPA if official repo fails
+            if ! command_exists add-apt-repository; then
+                echo "Installing 'software-properties-common' to enable add-apt-repository..."
+                if ! sudo apt install -y software-properties-common; then
+                    echo "Failed to install software-properties-common."
+                    return 1
+                fi
+            fi
+            if ! sudo add-apt-repository ppa:eza-community/eza -y; then
+                echo "Failed to add eza PPA repository."
+                return 1
+            fi
+            sudo apt update
+            if sudo apt install -y eza; then
+                echo "eza installed successfully via PPA fallback."
+                return 0 # Success
+            else
+                echo "Failed to install eza even after trying official repository and PPA."
+                return 1 # Failure
+            fi
         fi
     fi
 }
