@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## install required toolchain
-sudo apt install -y zsh zsh-doc git curl
+sudo apt install -y zsh zsh-doc git curl command-not-found
 
 ## install eza (modern ls replacement)
 if [ -f "./install_eza.sh" ]; then
@@ -23,6 +23,10 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:
 
 # zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+## Note: z, command-not-found, and cp are built-in Oh My Zsh plugins
+## They are already configured in .zshrc and don't need separate installation
+## command-not-found requires the 'command-not-found' package (installed above)
 
 ## edit default zshrc file
 # get default zsh template

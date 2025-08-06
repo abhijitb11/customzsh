@@ -2,7 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased] - 2025-06-17
+## [Unreleased] - 2025-08-06
+
+### Added
+- **Enhanced plugin support**: Added command-not-found package installation to customzsh.sh
+  - Ensures command-not-found plugin functionality works properly
+  - Added explanatory comments distinguishing built-in vs external plugins
+- **Plugin documentation**: Enhanced documentation with clear categorization
+  - Built-in Oh My Zsh plugins (z, command-not-found, cp, git) - no download required
+  - External plugins (zsh-syntax-highlighting, zsh-autosuggestions) - downloaded from GitHub
+
+## [2025-06-17]
 
 ### Added
 - **Essential Oh My Zsh plugins**: Enhanced .zshrc configuration with productivity-focused plugins
