@@ -31,7 +31,7 @@ The installation process follows these steps:
 
 - **customzsh.sh**: Automated installer that handles dependency installation, Oh My Zsh setup, plugin installation, and shell configuration. Now uses the dedicated install_eza.sh script for eza installation
 - **install_eza.sh**: Dedicated cross-platform eza installation script with comprehensive package manager support (apt, dnf, pacman, zypper, brew) and fallback options (cargo). For Debian/Ubuntu systems, uses the official deb.gierens.de repository as primary fallback when eza is not available in default repositories, with PPA as secondary fallback. Includes proper error handling and installation verification
-- **.zshrc**: Pre-configured zsh settings with agnoster theme, plugins (git, zsh-autosuggestions, zsh-syntax-highlighting), and eza aliases for enhanced directory listing
+- **.zshrc**: Pre-configured zsh settings with agnoster theme, essential plugins (git, zsh-autosuggestions, zsh-syntax-highlighting, z, command-not-found, cp), and eza aliases for enhanced directory listing
 
 ## Recent Updates
 
