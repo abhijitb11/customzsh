@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased] - 2025-06-17
 
 ### Added
+- **Essential Oh My Zsh plugins**: Enhanced .zshrc configuration with productivity-focused plugins
+  - Added `z` plugin for smart directory jumping based on frecency
+  - Added `command-not-found` plugin for helpful command suggestions
+  - Added `cp` plugin for enhanced copy operations with progress indicators
 - **Official eza repository support**: Updated install_eza.sh to use deb.gierens.de repository
   - Primary fallback for Debian/Ubuntu systems when eza not in default repositories
   - Automatic GPG key installation and repository configuration
