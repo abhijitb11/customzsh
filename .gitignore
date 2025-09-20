@@ -4,8 +4,23 @@ config.sh
 # Test artifacts
 tests/test_results/
 tests/tmp/
+test_results/
 *.log
 *.tap
+*.bats.out
+*.test_output
+
+# Docker artifacts
+.dockerignore
+docker-compose.override.yml
+Dockerfile.local
+*.dockerfile
+.docker/
+
+# Docker build context
+.build/
+build_*.log
+docker_build_*.log
 
 # Temporary files
 *.tmp

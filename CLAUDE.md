@@ -184,29 +184,197 @@ fi
 - **Validation**: Pre-flight checks with `check_dependencies()`
 - **Error Handling**: Clear messages for missing dependencies
 
+## Docker Testing Infrastructure
+
+### Multi-Distribution Container Support
+The project includes comprehensive Docker-based testing across multiple Linux distributions:
+
+- **Supported Distributions**: Ubuntu (latest, 20.04), Debian (stable), Fedora (latest), Arch Linux (latest)
+- **Package Manager Detection**: Automatic detection and support for apt, dnf, pacman, zypper
+- **Non-Root Testing**: Realistic user scenarios with testuser account and sudo privileges
+- **Network Independence**: Tests run without external API dependencies using specific versions
+
+### Docker Test Orchestrator (`run_docker_tests.sh`)
+Advanced test execution system with enterprise capabilities:
+
+```bash
+# Test all distributions
+./run_docker_tests.sh
+
+# Test specific distributions
+./run_docker_tests.sh ubuntu debian --verbose
+
+# Available options
+./run_docker_tests.sh --help
+./run_docker_tests.sh --list           # List supported distributions
+./run_docker_tests.sh --parallel       # Parallel execution (default)
+./run_docker_tests.sh --serial         # Serial execution for debugging
+./run_docker_tests.sh --verbose        # Detailed output
+./run_docker_tests.sh --no-cleanup     # Keep Docker images for debugging
+```
+
+### Docker Architecture Components
+- **Dockerfile.test**: Multi-stage builds optimized for different package managers
+- **Parallel Execution**: Concurrent container builds and test execution
+- **Resource Management**: Automatic cleanup of Docker images and containers
+- **Result Collection**: Per-distribution test results and logging
+- **CI/CD Ready**: Non-interactive execution suitable for automated pipelines
+
+## Modular Test Framework
+
+### Test Architecture Overview
+The project uses a two-tier testing system:
+
+#### Unit Tests (11 test cases)
+- **File**: `tests/test_installation.sh`
+- **Purpose**: Core functionality validation
+- **Execution**: Fast, isolated function testing
+- **Coverage**: Dependency checking, configuration handling, error scenarios
+
+#### Integration Tests (65 test cases across 4 categories)
+- **Specialized .bats files**: 1,294 total lines of test code
+- **Isolated environments**: Temporary test directories with full cleanup
+- **Network-free operation**: Uses specific eza version (v0.18.0) to avoid API calls
+
+### Integration Test Categories
+
+#### Installation Testing (`tests/installation.bats` - 25 test cases)
+- End-to-end installation workflow validation
+- Plugin directory creation and structure verification
+- Configuration file processing and validation
+- External plugin installation simulation
+- Built-in plugin documentation verification
+
+#### Idempotency Testing (`tests/idempotency.bats` - 12 test cases)
+- Multi-run safety validation
+- State consistency across executions
+- Plugin installation skip logic
+- Configuration loading stability
+- File permission preservation
+
+#### Uninstall Testing (`tests/uninstall.bats` - 14 test cases)
+- Complete system removal validation
+- Backup restoration functionality
+- Plugin directory cleanup verification
+- User file preservation testing
+- Multiple uninstall run safety
+
+#### Configuration Testing (`tests/configuration.bats` - 14 test cases)
+- Theme customization validation
+- Plugin array processing verification
+- Version specification handling
+- Configuration syntax validation
+- Edge case handling for plugin names
+
+### Enhanced Test Runner (`run_tests.sh`)
+Professional test orchestration with flexible execution modes:
+
+```bash
+# Execute different test suites
+./run_tests.sh --suite all          # All tests (default)
+./run_tests.sh --suite unit         # Unit tests only
+./run_tests.sh --suite integration  # Integration tests only
+
+# Execution modes
+./run_tests.sh --verbose            # Detailed output
+./run_tests.sh --fast              # Skip slower tests
+./run_tests.sh --docker            # Docker environment optimization
+./run_tests.sh --ci                # CI/CD environment optimization
+
+# Information commands
+./run_tests.sh --list              # List available test suites
+./run_tests.sh --help              # Show usage information
+```
+
+## Plugin Installation Validation
+
+### Comprehensive Plugin Testing
+The testing framework validates complete plugin installation workflows:
+
+#### External Plugin Installation
+- **GitHub Repository Cloning**: Simulated and validated git clone operations
+- **Directory Structure**: Verification of `~/.oh-my-zsh/custom/plugins/` structure
+- **Plugin Configuration**: Array processing from `config.sh` validation
+- **Idempotency**: Skip logic for already-installed plugins
+
+#### Verified Plugins
+- **zsh-autosuggestions**: Fish-like command autosuggestions
+- **zsh-syntax-highlighting**: Real-time command syntax highlighting
+- **Configuration Validation**: .zshrc plugin array verification
+- **Repository Mapping**: GitHub repository to local directory mapping
+
+#### Plugin Test Coverage
+- Plugin directory creation logic
+- Configuration array processing (`EXTERNAL_PLUGINS[]`)
+- Built-in plugin documentation (`BUILTIN_PLUGINS[]`)
+- Network simulation for GitHub cloning
+- Plugin enablement in .zshrc configuration
+
 ## Testing Coverage
 
-The test suite validates:
+### Unit Test Coverage (11 test cases)
 1. Dependency checking functionality
 2. Configuration file creation and validation
 3. Uninstall flag handling
-4. Idempotency for all components
-5. Backup and restore mechanisms
-6. Plugin installation logic
-7. Version management capabilities
-8. Error handling scenarios
-9. Output function consistency
-10. Missing file graceful handling
-11. Cross-platform compatibility
+4. Idempotency for zsh installation check
+5. .zshrc backup functionality
+6. Configuration file format validation
+7. eza installation script handling
+8. Error handling prevention
+9. Output helper functions
+10. Plugin installation logic
+11. Missing file graceful handling
+
+### Integration Test Coverage (65 test cases)
+1. **Installation Tests (25 cases)**: Complete workflow validation
+2. **Idempotency Tests (12 cases)**: Multi-run safety verification
+3. **Uninstall Tests (14 cases)**: System removal and restoration
+4. **Configuration Tests (14 cases)**: Customization and validation
+
+### Cross-Platform Validation
+- Ubuntu (latest and 20.04) with apt package manager
+- Debian (stable) with apt package manager
+- Fedora (latest) with dnf package manager
+- Arch Linux (latest) with pacman package manager
+- Automatic package manager detection and adaptation
 
 ## Maintenance Notes
 
 ### When Adding New Features
 - Update `config.sh.example` if user-configurable
-- Add corresponding test cases
+- Add corresponding test cases to appropriate .bats files
+- Test across all distributions: `./run_docker_tests.sh`
 - Update documentation (README, CHANGELOG, CLAUDE.md)
 - Ensure idempotency is maintained
 - Follow established error handling patterns
+- Validate plugin installation if plugin-related changes
+
+### Docker Testing Workflow
+For comprehensive validation during development:
+
+```bash
+# Quick local validation
+./run_tests.sh --suite unit          # Fast unit tests
+./run_tests.sh --suite integration   # Local integration tests
+
+# Cross-platform validation
+./run_docker_tests.sh ubuntu         # Test specific distribution
+./run_docker_tests.sh --parallel     # Test all distributions
+./run_docker_tests.sh --verbose      # Detailed debugging output
+
+# CI/CD integration
+./run_tests.sh --ci                  # CI-optimized local tests
+./run_docker_tests.sh --serial       # Serial Docker tests for CI
+```
+
+### Plugin Development and Testing
+When working with plugin functionality:
+
+1. **Plugin Configuration**: Update `EXTERNAL_PLUGINS[]` arrays in config files
+2. **Installation Logic**: Verify plugin cloning and directory creation in `customzsh.sh`
+3. **Integration Testing**: Add test cases to `tests/installation.bats` for new plugins
+4. **Cross-Platform Validation**: Ensure plugin installation works across all Docker distributions
+5. **.zshrc Integration**: Validate plugin enablement in the Oh My Zsh configuration
 
 ### When Modifying Existing Features
 - Run full test suite before and after changes
@@ -215,15 +383,29 @@ The test suite validates:
 - Document breaking changes in CHANGELOG
 
 ### Release Process
-1. Ensure all tests pass: `./run_tests.sh`
-2. Update CHANGELOG.md with detailed changes
-3. Update version references if applicable
-4. Test installation on clean system
-5. Verify uninstall functionality works correctly
+1. Ensure all unit tests pass: `./run_tests.sh --suite unit`
+2. Run integration tests: `./run_tests.sh --suite integration`
+3. Validate cross-platform compatibility: `./run_docker_tests.sh`
+4. Update CHANGELOG.md with detailed changes
+5. Update version references if applicable
+6. Test installation on clean system
+7. Verify uninstall functionality works correctly
+8. Validate Docker testing infrastructure with all distributions
 
-## Recent Major Updates (2025-09-19)
+## Recent Major Updates
 
-This release represents a complete transformation from a basic setup script to an enterprise-quality automation system with:
+### 2025-09-20: Docker Testing Infrastructure Release
+This second major release adds enterprise-grade cross-platform testing capabilities:
+
+- **Docker Cross-Platform Testing**: Multi-distribution validation across Ubuntu, Debian, Fedora, and Arch Linux
+- **Modular Test Framework**: 65 new integration tests across 4 specialized categories (1,294 lines of test code)
+- **Professional Test Orchestration**: Enhanced test runner with unit/integration separation and CI/CD optimization
+- **Plugin Installation Validation**: Comprehensive testing of zsh-autosuggestions and zsh-syntax-highlighting plugins
+- **Network-Independent Testing**: Removed external API dependencies for reliable CI/CD execution
+- **Enterprise Testing Infrastructure**: Parallel execution, automatic cleanup, and detailed result reporting
+
+### 2025-09-19: Major Enterprise Enhancement Release
+Initial transformation from a basic setup script to an enterprise-quality automation system:
 
 - **Production-Ready Architecture**: Configuration management, error handling, testing
 - **Professional Quality**: Comprehensive documentation, standardized patterns
@@ -231,4 +413,4 @@ This release represents a complete transformation from a basic setup script to a
 - **Reliability**: Automated testing, idempotency, dependency validation
 - **Maintainability**: Modular design, clear separation of concerns
 
-The project now serves as a reference implementation for shell automation best practices.
+The project now serves as a reference implementation for shell automation best practices with comprehensive cross-platform testing validation.
