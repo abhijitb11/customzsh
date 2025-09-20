@@ -1,0 +1,24 @@
+# User-specific configuration file
+config.sh
+
+# Test artifacts
+tests/test_results/
+tests/tmp/
+*.log
+*.tap
+
+# Temporary files
+*.tmp
+*.bak
+*~
+
+# TODO and planning files
+*todo*.md
+*TODO*.md
+spec_*.md
+suggested_*.md
+IMPROVED_*.md
+
+# OS-specific files
+.DS_Store
+Thumbs.db

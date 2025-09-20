@@ -1,0 +1,25 @@
+#!/bin/bash
+# Configuration for customzsh
+
+# Set the Zsh theme
+ZSH_THEME="agnoster"
+
+# List of external plugins to install
+# Format: "user/repo"
+EXTERNAL_PLUGINS=(
+    "zsh-users/zsh-syntax-highlighting"
+    "zsh-users/zsh-autosuggestions"
+)
+
+# Version of eza to install. Can be a specific version (e.g., "v0.10.1")
+# or "latest" to automatically fetch the newest release.
+EZA_VERSION="latest"
+
+# Built-in Oh My Zsh plugins (no download required)
+# These are already configured in .zshrc
+BUILTIN_PLUGINS=(
+    "git"
+    "z"
+    "command-not-found"
+    "cp"
+)

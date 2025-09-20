@@ -1,8 +1,30 @@
 #!/bin/bash
+#
+# install_eza.sh
+#
+# This script installs eza (modern ls replacement) with cross-platform
+# package manager support and comprehensive fallback options. It supports
+# apt, dnf, pacman, zypper, brew, and cargo installation methods.
+# For Debian/Ubuntu systems, it uses the official deb.gierens.de repository
+# as primary fallback when eza is not available in default repositories.
+#
+set -e
 
 # --- Function to check if a command exists ---
 command_exists() {
     command -v "$1" &> /dev/null
+}
+
+# --- Function to get latest eza version from GitHub ---
+get_latest_eza_version() {
+    echo "Fetching the latest version of eza..."
+    local latest_version=$(curl -s "https://api.github.com/repos/eza-community/eza/releases/latest" | jq -r .tag_name)
+    if [ -z "$latest_version" ] || [ "$latest_version" == "null" ]; then
+        echo "Error: Could not fetch the latest version of eza. Please check your network connection or set a specific version in config.sh." >&2
+        exit 1
+    fi
+    echo "Latest version is $latest_version."
+    echo "$latest_version"
 }
 
 # --- Function to install eza on Debian/Ubuntu ---
@@ -71,11 +93,25 @@ install_eza_apt() {
     fi
 }
 
-# --- Main Installation Logic ---
-if command_exists eza; then
-    echo "eza is already installed."
+
+# --- Load Configuration and Determine Target Version ---
+if [ -f "config.sh" ]; then
+    source "config.sh"
 else
-    echo "eza not found. Attempting to install..."
+    echo "Warning: config.sh not found. Using default EZA_VERSION='latest'."
+    EZA_VERSION="latest"
+fi
+
+TARGET_EZA_VERSION=$EZA_VERSION
+if [ "$TARGET_EZA_VERSION" == "latest" ]; then
+    TARGET_EZA_VERSION=$(get_latest_eza_version)
+fi
+echo "Target eza version is set to: $TARGET_EZA_VERSION"
+# --- Main Installation Logic ---
+if command_exists eza && [[ $(eza --version 2>/dev/null) == *"$TARGET_EZA_VERSION"* ]]; then
+    echo "eza version $TARGET_EZA_VERSION is already installed. Skipping."
+else
+    echo "Installing eza version $TARGET_EZA_VERSION..."
     if [ "$(uname -s)" = "Linux" ]; then
         if command_exists apt; then
             install_eza_apt
