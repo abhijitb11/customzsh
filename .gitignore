@@ -34,6 +34,11 @@ spec_*.md
 suggested_*.md
 IMPROVED_*.md
 
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+
 # OS-specific files
 .DS_Store
-Thumbs.db.env
+Thumbs.db
