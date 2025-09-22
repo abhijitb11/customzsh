@@ -5,6 +5,27 @@
 # End-to-end installation testing for customzsh
 # Tests the complete installation workflow and verifies all components
 #
+# Test Categories:
+# - Installation script validation and execution
+# - Configuration file creation and validation
+# - Dependency checking and system requirements
+# - Plugin installation and directory structure
+# - Integration with eza installation script
+# - Error handling and graceful degradation
+# - Network-free testing with offline configurations
+#
+# Test Count: 25 tests
+# Dependencies: git, curl, sudo, jq, zsh
+# Environment: Supports Docker containers and local execution
+#
+# Author: Claude Code (Enhanced)
+# Version: 2.0
+#
+
+# Load test helpers
+load 'helpers/isolation_utils'
+load 'helpers/validation_helpers'
+load 'helpers/error_simulation'
 
 # Helper function to create network-free config
 create_offline_config() {
@@ -15,28 +36,48 @@ create_offline_config() {
 
 # Setup function runs before each test
 setup() {
-    # Set up clean test environment
-    export TEST_HOME="/tmp/customzsh_installation_test_$$"
-    mkdir -p "$TEST_HOME"
-    export HOME="$TEST_HOME"
-    export USER="testuser"
+    # Generate UUID for unique test directory
+    local test_uuid
+    test_uuid=$(generate_test_uuid)
+    export TEST_HOME="/tmp/customzsh_installation_test_${test_uuid}"
+    export TEST_SCRIPT_DIR="${TEST_HOME}/customzsh"
+
+    # Validate clean environment before setup
+    validate_clean_environment "$TEST_HOME" true
+
+    # Setup isolated test environment
+    setup_isolated_environment "$TEST_HOME" "installation_test"
 
     # Copy project files to test directory (including hidden files)
-    find . -maxdepth 1 -type f -exec cp {} "$TEST_HOME/" \; 2>/dev/null || true
-    find . -maxdepth 1 -name ".*" -type f -exec cp {} "$TEST_HOME/" \; 2>/dev/null || true
+    mkdir -p "$TEST_SCRIPT_DIR"
+    find . -maxdepth 1 -type f -exec cp {} "$TEST_SCRIPT_DIR/" \; 2>/dev/null || true
+    find . -maxdepth 1 -name ".*" -type f -exec cp {} "$TEST_SCRIPT_DIR/" \; 2>/dev/null || true
     # Copy directories but avoid copying test directory itself
-    find . -maxdepth 1 -type d ! -name "." ! -name "tests" -exec cp -r {} "$TEST_HOME/" \; 2>/dev/null || true
-    cd "$TEST_HOME"
+    find . -maxdepth 1 -type d ! -name "." ! -name "tests" -exec cp -r {} "$TEST_SCRIPT_DIR/" \; 2>/dev/null || true
+    cd "$TEST_SCRIPT_DIR"
 
     # Ensure we have a clean config file with no network dependencies
     rm -f config.sh
+
+    # Set test timeout
+    set_test_timeout 300 "installation_test_${test_uuid}"
 }
 
 # Teardown function runs after each test
 teardown() {
-    # Clean up test environment
-    cd /
-    rm -rf "$TEST_HOME" 2>/dev/null || true
+    # Clear test timeout
+    clear_test_timeout
+
+    # Check for resource leaks
+    check_for_resource_leaks "$TEST_HOME"
+
+    # Comprehensive cleanup with verification
+    cleanup_test_environment "$TEST_HOME" true
+
+    # Verify cleanup completed
+    [ ! -d "$TEST_HOME" ] || {
+        echo "Warning: Test cleanup incomplete for $TEST_HOME" >&2
+    }
 }
 
 @test "installation script exists and is executable" {

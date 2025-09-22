@@ -26,6 +26,10 @@ TOTAL_TESTS=0
 PASSED_TESTS=0
 FAILED_TESTS=0
 SKIPPED_TESTS=0
+START_TIME=""
+TEST_LOG_FILE="/tmp/customzsh_test_$(date +%s).log"
+RETRY_COUNT=${RETRY_COUNT:-1}
+FAST_MODE=${FAST_MODE:-false}
 
 # Function to print colored output
 print_status() {
@@ -58,6 +62,9 @@ OPTIONS:
     -f, --fast          Skip slower integration tests
     --docker            Optimize for Docker environment
     --ci                Optimize for CI/CD environment
+    --retry COUNT       Number of retries for failed tests (default: 1)
+    --log FILE          Custom log file location
+    --no-cleanup        Don't cleanup log files after execution
 
 Examples:
     $0                      # Run all tests
@@ -80,10 +87,12 @@ list_suites() {
     echo "  integration          - Modular integration tests"
     echo "                        Files: tests/*.bats"
     echo "                        Categories:"
-    echo "                          - installation.bats (end-to-end installation)"
-    echo "                          - idempotency.bats (multi-run safety)"
-    echo "                          - uninstall.bats (complete removal)"
-    echo "                          - configuration.bats (config customization)"
+    echo "                          - installation.bats (25 tests: end-to-end installation)"
+    echo "                          - configuration.bats (14 tests: config customization)"
+    echo "                          - idempotency.bats (12 tests: multi-run safety)"
+    echo "                          - uninstall.bats (14 tests: complete removal)"
+    echo "                          - error_scenarios.bats (14 tests: error handling)"
+    echo "                          - edge_cases.bats (23 tests: malformed inputs)"
     echo
     echo "  all (default)        - All unit and integration tests"
     echo

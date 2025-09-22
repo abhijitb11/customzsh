@@ -5,34 +5,75 @@
 # Complete removal testing for customzsh
 # Tests the --uninstall functionality and system restoration
 #
+# Test Categories:
+# - Uninstall flag recognition and processing
+# - Complete Oh My Zsh removal and cleanup
+# - Configuration file restoration and backup handling
+# - Plugin directory cleanup and validation
+# - System state restoration to pre-installation state
+# - User data preservation during uninstall
+# - Multiple uninstall run safety verification
+#
+# Test Count: 14 tests
+# Dependencies: File system operations, backup restoration
+# Environment: Enhanced isolation with backup verification
+#
+# Author: Claude Code (Enhanced)
+# Version: 2.0
+#
+
+# Load test helpers
+load 'helpers/isolation_utils'
+load 'helpers/validation_helpers'
+load 'helpers/error_simulation'
 
 # Setup function runs before each test
 setup() {
-    # Set up clean test environment
-    export TEST_HOME="/tmp/customzsh_uninstall_test_$$"
-    mkdir -p "$TEST_HOME"
-    export HOME="$TEST_HOME"
-    export USER="testuser"
+    # Generate UUID for unique test directory
+    local test_uuid
+    test_uuid=$(generate_test_uuid)
+    export TEST_HOME="/tmp/customzsh_uninstall_test_${test_uuid}"
+    export TEST_SCRIPT_DIR="${TEST_HOME}/customzsh"
+
+    # Validate clean environment before setup
+    validate_clean_environment "$TEST_HOME" true
+
+    # Setup isolated test environment
+    setup_isolated_environment "$TEST_HOME" "uninstall_test"
 
     # Copy project files to test directory (including hidden files)
-    find . -maxdepth 1 -type f -exec cp {} "$TEST_HOME/" \; 2>/dev/null || true
-    find . -maxdepth 1 -name ".*" -type f -exec cp {} "$TEST_HOME/" \; 2>/dev/null || true
+    mkdir -p "$TEST_SCRIPT_DIR"
+    find . -maxdepth 1 -type f -exec cp {} "$TEST_SCRIPT_DIR/" \; 2>/dev/null || true
+    find . -maxdepth 1 -name ".*" -type f -exec cp {} "$TEST_SCRIPT_DIR/" \; 2>/dev/null || true
     # Copy directories but avoid copying test directory itself
-    find . -maxdepth 1 -type d ! -name "." ! -name "tests" -exec cp -r {} "$TEST_HOME/" \; 2>/dev/null || true
-    cd "$TEST_HOME"
+    find . -maxdepth 1 -type d ! -name "." ! -name "tests" -exec cp -r {} "$TEST_SCRIPT_DIR/" \; 2>/dev/null || true
+    cd "$TEST_SCRIPT_DIR"
 
     # Ensure we have a clean config file with no network dependencies
     rm -f config.sh
     cp config.sh.example config.sh
     # Use specific eza version to avoid network calls in tests
     sed -i 's/EZA_VERSION="latest"/EZA_VERSION="v0.18.0"/' config.sh
+
+    # Set test timeout
+    set_test_timeout 180 "uninstall_test_${test_uuid}"
 }
 
 # Teardown function runs after each test
 teardown() {
-    # Clean up test environment
-    cd /
-    rm -rf "$TEST_HOME" 2>/dev/null || true
+    # Clear test timeout
+    clear_test_timeout
+
+    # Check for resource leaks
+    check_for_resource_leaks "$TEST_HOME"
+
+    # Comprehensive cleanup with verification
+    cleanup_test_environment "$TEST_HOME" true
+
+    # Verify cleanup completed
+    [ ! -d "$TEST_HOME" ] || {
+        echo "Warning: Test cleanup incomplete for $TEST_HOME" >&2
+    }
 }
 
 @test "uninstall flag is recognized and processed" {

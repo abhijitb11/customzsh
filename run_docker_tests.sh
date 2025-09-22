@@ -21,6 +21,9 @@ TEST_RESULTS_DIR="$SCRIPT_DIR/test_results"
 PARALLEL=${PARALLEL:-true}
 CLEANUP=${CLEANUP:-true}
 VERBOSE=${VERBOSE:-false}
+TEST_SUITE=${TEST_SUITE:-"integration"}
+INCLUDE_PERF=${INCLUDE_PERF:-false}
+INCLUDE_COMPAT=${INCLUDE_COMPAT:-false}
 
 # Test distribution configurations
 # Format: "image:tag,package_manager,distro_name"
@@ -59,6 +62,9 @@ OPTIONS:
     -c, --no-cleanup    Skip cleanup of Docker images
     -l, --list          List available distributions
     -r, --results-dir   Directory for test results (default: ./test_results)
+    --suite SUITE       Run specific test suite (unit, integration, all, fast)
+    --include-perf      Include performance benchmarking tests
+    --include-compat    Include compatibility tests
 
 DISTRO:
     Specific distribution to test (e.g., ubuntu, debian, fedora, arch)
@@ -164,11 +170,21 @@ run_test_for_distro() {
 
     info "Running tests for $distro_name..."
 
+    # Prepare test command based on suite selection
+    local test_cmd="./run_tests.sh --suite $TEST_SUITE"
+    if [ "$INCLUDE_PERF" = "true" ]; then
+        test_cmd="$test_cmd && ./tests/bats/bin/bats tests/performance.bats"
+    fi
+    if [ "$INCLUDE_COMPAT" = "true" ]; then
+        test_cmd="$test_cmd && ./tests/bats/bin/bats tests/compatibility.bats"
+    fi
+
     # Run the Docker container with tests
     if docker run --rm \
         --name "customzsh-test-$distro_name-$$" \
         -v "$TEST_RESULTS_DIR:/tmp/results" \
-        "$test_image" > "$test_log" 2>&1; then
+        "$test_image" \
+        bash -c "$test_cmd" > "$test_log" 2>&1; then
         local end_time=$(date +%s)
         local duration=$((end_time - start_time))
         success "Tests passed for $distro_name (${duration}s)"
@@ -327,6 +343,18 @@ main() {
             -r|--results-dir)
                 TEST_RESULTS_DIR="$2"
                 shift 2
+                ;;
+            --suite)
+                TEST_SUITE="$2"
+                shift 2
+                ;;
+            --include-perf)
+                INCLUDE_PERF=true
+                shift
+                ;;
+            --include-compat)
+                INCLUDE_COMPAT=true
+                shift
                 ;;
             -*)
                 error "Unknown option: $1"

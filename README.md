@@ -24,7 +24,8 @@ A production-ready, automated zsh setup system that provides comprehensive shell
 - **Uninstall Support**: Complete removal with `--uninstall` flag and original configuration restoration
 - **Version Management**: Supports specific eza versions or automatic latest release detection
 - **Cross-Platform**: Enhanced support for multiple Linux distributions (apt, dnf, pacman, zypper)
-- **Automated Testing**: Comprehensive test suite with 11 unit tests and 120+ integration tests for reliability assurance
+- **Enterprise CI/CD Pipeline**: Production-grade GitHub Actions workflow with comprehensive testing infrastructure
+- **Automated Testing**: Extensive test suite with 131+ test cases across 8 specialized categories for maximum reliability
 - **Dependency Validation**: Pre-installation checks for required system tools
 
 ## Visual Showcase
@@ -139,7 +140,7 @@ For eza, you can specify either:
 1. **Enterprise-grade reliability**: Comprehensive error handling and rollback capabilities
 2. **Idempotent operations**: Safe to run multiple times without conflicts
 3. **Cross-platform support**: Works across Ubuntu, Debian, Fedora, Arch Linux, and macOS
-4. **Automated testing**: 120+ integration tests ensure stability
+4. **Automated testing**: 131+ comprehensive tests with CI/CD pipeline ensure maximum stability
 5. **Easy customization**: Simple configuration file for theme and plugin selection
 
 ### How It Compares
@@ -214,10 +215,42 @@ Comprehensive end-to-end testing with modular test files:
 ```
 
 Test categories:
-- `installation.bats`: End-to-end installation workflow
-- `idempotency.bats`: Multi-run safety validation
-- `uninstall.bats`: Complete removal testing
-- `configuration.bats`: Config customization testing
+- `installation.bats`: End-to-end installation workflow (25 test cases)
+- `idempotency.bats`: Multi-run safety validation (12 test cases)
+- `uninstall.bats`: Complete removal testing (14 test cases)
+- `configuration.bats`: Config customization testing (14 test cases)
+- `performance.bats`: Resource usage and timing benchmarks (10 test cases)
+- `compatibility.bats`: Cross-platform shell validation (8 test cases)
+
+#### Cross-Platform Docker Testing
+Comprehensive testing across multiple Linux distributions:
+```bash
+./run_docker_tests.sh                    # Test all distributions
+./run_docker_tests.sh ubuntu debian      # Test specific distributions
+./run_docker_tests.sh --parallel         # Parallel execution (default)
+./run_docker_tests.sh --serial           # Serial execution for debugging
+./run_docker_tests.sh --verbose          # Detailed output
+./run_docker_tests.sh --list             # List available distributions
+```
+
+Supported distributions:
+- **Ubuntu**: Latest + 20.04 LTS (apt package manager)
+- **Debian**: Stable release (apt package manager)
+- **Fedora**: Latest release (dnf package manager)
+- **Arch Linux**: Rolling release (pacman package manager)
+
+#### Performance & Compatibility Testing
+Extended validation with specialized test suites:
+```bash
+# Performance benchmarking tests
+./run_docker_tests.sh --include-perf
+
+# Cross-platform compatibility tests
+./run_docker_tests.sh --include-compat
+
+# Combined performance and compatibility testing
+./run_docker_tests.sh --include-perf --include-compat
+```
 
 #### Advanced Test Options
 ```bash
@@ -225,11 +258,13 @@ Test categories:
 ./run_tests.sh --verbose           # Detailed output
 ./run_tests.sh --list              # List available test suites
 ./run_tests.sh --suite all         # Run all tests (default)
+./run_tests.sh --fast              # Skip slower tests
+./run_tests.sh --ci                # CI/CD optimized execution
 ```
 
-## Docker Testing
+## Docker Testing & CI/CD
 
-For comprehensive cross-platform validation, the project includes Docker-based testing across multiple Linux distributions.
+For comprehensive cross-platform validation, the project includes Docker-based testing across multiple Linux distributions with enterprise-grade CI/CD integration.
 
 ### Docker Requirements
 
@@ -277,6 +312,29 @@ The Docker testing system uses:
 3. **Non-root user testing** for realistic scenarios
 4. **Parallel execution** for faster results
 5. **Automatic cleanup** of Docker resources
+
+### CI/CD Pipeline
+
+The project features a comprehensive GitHub Actions workflow (`.github/workflows/test.yml`) with enterprise-grade capabilities:
+
+#### Automated Testing Pipeline
+- **Multi-stage Workflow**: 8 specialized jobs with dependency management
+- **Cross-platform Validation**: Automated testing across 5 Linux distributions
+- **Performance Monitoring**: Automated baseline tracking and regression detection
+- **Quality Assurance**: Comprehensive security scanning and health monitoring
+- **Test Analytics**: Historical trend analysis with success rate tracking
+
+#### Professional Reporting
+- **Enhanced Test Summaries**: Comprehensive markdown reports with execution timing
+- **Performance Analysis**: Automated regression detection with threshold alerts
+- **Quality Metrics**: Success rate calculation with quality rating assignment
+- **Coverage Analysis**: Detailed breakdown of test coverage across all categories
+
+#### Artifact Management
+- **Structured Collection**: Organized artifact storage with extended retention policies
+- **Historical Data**: Long-term analytics data (90-day retention) for trend analysis
+- **Quality Reports**: Security and health analysis with actionable recommendations
+- **Performance Metrics**: Automated baseline tracking with regression detection
 
 ### Docker Test Results
 

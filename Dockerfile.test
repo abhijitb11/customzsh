@@ -79,8 +79,8 @@ RUN git --version && \
     zsh --version && \
     bats --version
 
-# Default command runs the test suite
-CMD ["./run_tests.sh"]
+# Default command runs the comprehensive test suite including new tests
+CMD ["./run_tests.sh", "--suite", "all"]
 
 # Labels for metadata
 LABEL maintainer="customzsh"
