@@ -120,7 +120,7 @@ The test suite is organized into **6 specialized test files** covering different
 #### Run Specific Test Suites
 ```bash
 ./run_tests.sh --suite unit       # Unit tests only (11 tests)
-./run_tests.sh --suite integration # Integration tests (100+ tests)
+./run_tests.sh --suite integration # Integration tests (110 tests)
 ./run_tests.sh --fast             # Skip slower tests
 ```
 
@@ -320,8 +320,8 @@ simulate_network_failure "dns" "/tmp/mock_dir"
 
 #### Local Execution
 - **Unit Tests**: ~10 seconds (11 tests)
-- **Integration Tests**: ~2-5 minutes (100+ tests)
-- **Complete Suite**: ~3-7 minutes (120+ tests)
+- **Integration Tests**: ~2-5 minutes (110 tests)
+- **Complete Suite**: ~3-7 minutes (121 tests)
 
 #### Docker Execution
 - **Single Distribution**: ~3-8 minutes

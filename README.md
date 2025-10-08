@@ -25,7 +25,7 @@ A production-ready, automated zsh setup system that provides comprehensive shell
 - **Version Management**: Supports specific eza versions or automatic latest release detection
 - **Cross-Platform**: Enhanced support for multiple Linux distributions (apt, dnf, pacman, zypper)
 - **Enterprise CI/CD Pipeline**: Production-grade GitHub Actions workflow with comprehensive testing infrastructure
-- **Automated Testing**: Extensive test suite with 131+ test cases across 8 specialized categories for maximum reliability
+- **Automated Testing**: Extensive test suite with 121 test cases across 8 specialized categories for maximum reliability
 - **Dependency Validation**: Pre-installation checks for required system tools
 
 ## Visual Showcase
@@ -140,7 +140,7 @@ For eza, you can specify either:
 1. **Enterprise-grade reliability**: Comprehensive error handling and rollback capabilities
 2. **Idempotent operations**: Safe to run multiple times without conflicts
 3. **Cross-platform support**: Works across Ubuntu, Debian, Fedora, Arch Linux, and macOS
-4. **Automated testing**: 131+ comprehensive tests with CI/CD pipeline ensure maximum stability
+4. **Automated testing**: 121 comprehensive tests with CI/CD pipeline ensure maximum stability
 5. **Easy customization**: Simple configuration file for theme and plugin selection
 
 ### How It Compares
@@ -220,7 +220,9 @@ Test categories:
 - `uninstall.bats`: Complete removal testing (14 test cases)
 - `configuration.bats`: Config customization testing (14 test cases)
 - `performance.bats`: Resource usage and timing benchmarks (10 test cases)
-- `compatibility.bats`: Cross-platform shell validation (8 test cases)
+- `compatibility.bats`: Cross-platform shell validation (9 test cases)
+- `error_scenarios.bats`: Error condition handling (14 test cases)
+- `edge_cases.bats`: Boundary conditions and malformed input (23 test cases)
 
 #### Cross-Platform Docker Testing
 Comprehensive testing across multiple Linux distributions:
@@ -318,7 +320,7 @@ The Docker testing system uses:
 The project features a comprehensive GitHub Actions workflow (`.github/workflows/test.yml`) with enterprise-grade capabilities:
 
 #### Automated Testing Pipeline
-- **Multi-stage Workflow**: 8 specialized jobs with dependency management
+- **Multi-stage Workflow**: 9 specialized jobs with dependency management
 - **Cross-platform Validation**: Automated testing across 5 Linux distributions
 - **Performance Monitoring**: Automated baseline tracking and regression detection
 - **Quality Assurance**: Comprehensive security scanning and health monitoring

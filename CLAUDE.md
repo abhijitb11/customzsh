@@ -38,9 +38,9 @@ The project follows a modern, enterprise-grade architecture:
 
 ### Testing Framework
 - **Bats Integration**: Professional testing with bats-core framework
-- **Comprehensive Coverage**: 11 test cases covering all functionality
-- **Isolated Environments**: Tests run in temporary, clean environments
-- **Automated Validation**: CI/CD ready test suite
+- **Comprehensive Coverage**: 121 test cases across 8 specialized test suites
+- **Isolated Environments**: Tests run in temporary, clean environments with UUID-based isolation
+- **Automated Validation**: CI/CD ready test suite with performance and compatibility testing
 
 ## File Structure and Responsibilities
 
@@ -112,8 +112,8 @@ The project follows a modern, enterprise-grade architecture:
 - Installation verification and validation
 
 ### 6. Automated Testing & CI/CD Infrastructure
-- 131+ comprehensive test cases across 8 specialized test suites
-- Enterprise-grade GitHub Actions workflow with multi-stage testing
+- 121 comprehensive test cases across 8 specialized test suites
+- Enterprise-grade GitHub Actions workflow with 9-job multi-stage testing pipeline
 - Performance monitoring with automated regression detection
 - Cross-platform Docker testing across 5 Linux distributions
 - Professional reporting with analytics and quality assessment
@@ -234,9 +234,9 @@ The project uses a two-tier testing system:
 - **Execution**: Fast, isolated function testing
 - **Coverage**: Dependency checking, configuration handling, error scenarios
 
-#### Integration Tests (83 test cases across 6 categories)
-- **Specialized .bats files**: 1,294 total lines of test code
-- **Isolated environments**: Temporary test directories with full cleanup
+#### Integration Tests (110 test cases across 8 categories)
+- **Specialized .bats files**: 3,361 total lines of test code
+- **Isolated environments**: Temporary test directories with UUID-based cleanup
 - **Network-free operation**: Uses specific eza version (v0.18.0) to avoid API calls
 
 ### Integration Test Categories
@@ -268,6 +268,37 @@ The project uses a two-tier testing system:
 - Version specification handling
 - Configuration syntax validation
 - Edge case handling for plugin names
+
+#### Error Scenarios Testing (`tests/error_scenarios.bats` - 14 test cases)
+- Network failure handling (git clone, GitHub API, DNS)
+- Permission issue management (sudo, directory access, filesystem)
+- Repository validation (invalid URLs, non-existent repos)
+- System resource constraint handling (disk space, memory)
+- Configuration error recovery (malformed files, invalid syntax)
+
+#### Edge Cases Testing (`tests/edge_cases.bats` - 23 test cases)
+- Malformed configuration file handling
+- Invalid plugin name format processing
+- Unicode and special character support
+- Extremely long input and boundary conditions
+- Shell injection prevention and security validation
+- File permission and access edge cases
+
+#### Performance Testing (`tests/performance.bats` - 10 test cases)
+- Installation time benchmarking (60-second baseline)
+- Memory usage monitoring (100MB baseline)
+- Disk space utilization tracking (50MB baseline)
+- Configuration processing performance (0.1-second baseline)
+- Plugin installation performance (5-second baseline)
+- Resource consumption analysis and regression detection
+
+#### Compatibility Testing (`tests/compatibility.bats` - 9 test cases)
+- Zsh version compatibility validation (5.0, 5.4, 5.8, 5.9+)
+- Oh My Zsh version compatibility testing
+- Shell configuration compatibility verification
+- Cross-platform shell behavior validation
+- Plugin compatibility across zsh versions
+- Theme compatibility and rendering validation
 
 ### Enhanced Test Runner (`run_tests.sh`)
 Professional test orchestration with flexible execution modes:
@@ -328,11 +359,15 @@ The testing framework validates complete plugin installation workflows:
 10. Plugin installation logic
 11. Missing file graceful handling
 
-### Integration Test Coverage (65 test cases)
+### Integration Test Coverage (110 test cases)
 1. **Installation Tests (25 cases)**: Complete workflow validation
 2. **Idempotency Tests (12 cases)**: Multi-run safety verification
 3. **Uninstall Tests (14 cases)**: System removal and restoration
 4. **Configuration Tests (14 cases)**: Customization and validation
+5. **Error Scenarios Tests (14 cases)**: Comprehensive error handling validation
+6. **Edge Cases Tests (23 cases)**: Boundary conditions and malformed input handling
+7. **Performance Tests (10 cases)**: Resource usage and timing benchmarks
+8. **Compatibility Tests (9 cases)**: Cross-version shell validation
 
 ### Cross-Platform Validation
 - Ubuntu (latest and 20.04) with apt package manager
@@ -401,11 +436,13 @@ When working with plugin functionality:
 This second major release adds enterprise-grade cross-platform testing capabilities:
 
 - **Docker Cross-Platform Testing**: Multi-distribution validation across Ubuntu, Debian, Fedora, and Arch Linux
-- **Modular Test Framework**: 65 new integration tests across 4 specialized categories (1,294 lines of test code)
+- **Modular Test Framework**: 110 integration tests across 8 specialized categories (3,361 lines of test code)
 - **Professional Test Orchestration**: Enhanced test runner with unit/integration separation and CI/CD optimization
 - **Plugin Installation Validation**: Comprehensive testing of zsh-autosuggestions and zsh-syntax-highlighting plugins
 - **Network-Independent Testing**: Removed external API dependencies for reliable CI/CD execution
 - **Enterprise Testing Infrastructure**: Parallel execution, automatic cleanup, and detailed result reporting
+- **Advanced Error & Edge Case Testing**: 37 new tests for error scenarios and boundary conditions
+- **Performance & Compatibility Testing**: 19 new tests for benchmarking and cross-version validation
 
 ### 2025-09-19: Major Enterprise Enhancement Release
 Initial transformation from a basic setup script to an enterprise-quality automation system:
@@ -421,7 +458,7 @@ The project now serves as a reference implementation for shell automation best p
 ### 2025-09-21: Enterprise CI/CD Testing Infrastructure Release
 Third major release implementing production-grade CI/CD pipeline with comprehensive testing automation:
 
-- **Enterprise GitHub Actions Workflow**: 8-stage CI/CD pipeline with 1,330+ lines of workflow configuration
+- **Enterprise GitHub Actions Workflow**: 9-job CI/CD pipeline with 1,346 lines of workflow configuration
 - **Advanced Test Reporting**: Professional markdown reports with performance regression detection and quality metrics
 - **Comprehensive Test Analytics**: Historical data collection with 90-day retention and success rate trending
 - **Performance Monitoring**: Automated baseline tracking with threshold alerts and regression detection
@@ -436,7 +473,7 @@ The project features a comprehensive GitHub Actions workflow (`.github/workflows
 
 #### Workflow Overview
 ```yaml
-# 8 specialized jobs with dependency management:
+# 9 specialized jobs with dependency management:
 jobs:
   unit-tests           # Core functionality validation (3 minutes)
   integration-tests    # End-to-end workflow verification (7 minutes)
@@ -446,6 +483,7 @@ jobs:
   security-checks      # Quality and security analysis (15 minutes)
   test-summary         # Comprehensive reporting (5 minutes)
   coverage-analysis    # Test coverage assessment (10 minutes)
+  workflow-info        # Workflow metadata and configuration documentation
 ```
 
 #### Key Features
