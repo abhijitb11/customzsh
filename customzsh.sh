@@ -127,8 +127,8 @@ fi
 info "Installing external plugins..."
 for plugin in "${EXTERNAL_PLUGINS[@]}"; do
     repo_name=$(basename "$plugin")
-    target_dir="${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/$repo_name"
-    
+    target_dir="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/$repo_name"
+
     if [ -d "$target_dir" ]; then
         info "$repo_name is already installed. Skipping."
     else
