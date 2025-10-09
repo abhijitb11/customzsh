@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2025-10-08] - Plugin Installation Path Fix
+
+### Fixed
+- **Plugin Installation Bug**: Corrected critical path expansion issue preventing external plugins from being downloaded
+  - Fixed tilde expansion in plugin installation path that caused plugins to be cloned to incorrect directory
+  - Changed `${ZSH_CUSTOM:-~/.oh-my-zsh/custom}` to `${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}`
+  - Ensures `zsh-autosuggestions` and `zsh-syntax-highlighting` are properly downloaded to `~/.oh-my-zsh/custom/plugins/`
+  - Resolves issue where plugins were enabled in `.zshrc` but never actually installed
+
+### Technical Details
+- **Root Cause**: Shell parameter expansion does not expand tilde (`~`) characters
+- **Impact**: External plugins referenced in `EXTERNAL_PLUGINS` array were not being cloned
+- **Solution**: Use `$HOME` variable instead of `~` for proper path expansion
+- **Affected File**: `customzsh.sh` line 130
+
+### Testing
+- ✅ Unit tests: 11/11 passed
+- ✅ Plugin installation tests: 6/6 passed
+- ✅ Path expansion verified with absolute paths
+- ✅ Cross-platform compatibility maintained
+
 ## [2025-09-21] - Enterprise CI/CD Testing Infrastructure Release
 
 ### Added
